@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lumière Studio — Fotografer Couple, Wedding & Family</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FAF7F2',
+            surface: '#FFFFFF',
+            ink: '#1F1A17',
+            muted: '#6E6259',
+            border: '#E8DED4',
+            accent: '#A67C52',
+            accentLight: '#C4A882',
+          },
+          fontFamily: {
+            serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background-color: #FAF7F2; color: #1F1A17; font-family: 'Inter', sans-serif; }
+
+    /* Fade-in on load */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.8s ease both; }
+    .delay-1 { animation-delay: 0.15s; }
+    .delay-2 { animation-delay: 0.3s; }
+    .delay-3 { animation-delay: 0.45s; }
+    .delay-4 { animation-delay: 0.6s; }
+
+    /* Scroll reveal */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Navbar blur */
+    .navbar-scroll { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+    /* Gallery hover */
+    .gallery-item img { transition: transform 0.5s ease, filter 0.5s ease; }
+    .gallery-item:hover img { transform: scale(1.04); filter: brightness(0.95); }
+    .gallery-item { overflow: visible; border-radius: 0; }
+    .gallery-item > div:first-child { overflow: hidden; border-radius: 16px; }
+
+    /* Package card hover */
+    .pkg-card { transition: box-shadow 0.3s ease, transform 0.3s ease; }
+    .pkg-card:hover { box-shadow: 0 12px 40px rgba(166,124,82,0.12); transform: translateY(-4px); }
+    .pkg-card.featured { box-shadow: 0 8px 32px rgba(166,124,82,0.18); }
+
+    /* FAQ */
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+    .faq-answer.open { max-height: 200px; }
+    .faq-icon { transition: transform 0.3s ease; }
+    .faq-icon.open { transform: rotate(45deg); }
+
+    /* Nav link */
+    .nav-link { position: relative; }
+    .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: #A67C52; transition: width 0.3s ease; }
+    .nav-link:hover::after { width: 100%; }
+
+    /* Divider ornament */
+    .ornament { letter-spacing: 0.4em; }
+
+    /* Mobile menu */
+    #mobile-menu { transition: opacity 0.3s ease, transform 0.3s ease; }
+
+    /* Tab active */
+    .tab-btn.active { color: #A67C52; border-bottom: 2px solid #A67C52; }
+
+    /* Process step line */
+    .step-line { position: absolute; top: 20px; left: calc(50% + 20px); width: calc(100% - 40px); height: 1px; background: #E8DED4; }
+
+    /* Grain overlay subtle */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+<!-- DEMO BADGE -->
+<div class="fixed bottom-4 left-4 z-50 bg-ink/80 text-cream text-[10px] tracking-widest uppercase px-3 py-1.5 rounded-full font-sans font-medium opacity-70 select-none">
+  Demo Concept
+</div>
+
+<!-- ═══════════════════════════════════════ NAVBAR ═══════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-40 transition-all duration-500">
+  <div class="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
+
+    <!-- Brand -->
+    <a href="#" class="font-serif text-2xl font-light tracking-wide text-ink">
+      Lumière<span class="text-accent italic"> Studio</span>
+    </a>
+
+    <!-- Desktop menu -->
+    <div class="hidden md:flex items-center gap-8 font-sans text-[13px] font-medium text-muted tracking-wide">
+      <a href="#portfolio" class="nav-link hover:text-ink transition-colors">Portfolio</a>
+      <a href="#about" class="nav-link hover:text-ink transition-colors">About</a>
+      <a href="#packages" class="nav-link hover:text-ink transition-colors">Packages</a>
+      <a href="#faq" class="nav-link hover:text-ink transition-colors">FAQ</a>
+      <a href="#contact" class="nav-link hover:text-ink transition-colors">Contact</a>
+    </div>
+
+    <!-- CTA + Hamburger -->
+    <div class="flex items-center gap-3">
+      <a href="https://wa.me/6281234567890" target="_blank"
+         class="hidden md:inline-flex items-center gap-2 bg-accent text-cream text-[12px] font-medium tracking-widest uppercase px-4 py-2 rounded-full hover:bg-accentLight transition-colors">
+        Book Session
+      </a>
+      <button id="menu-toggle" class="md:hidden flex flex-col gap-[5px] p-1" aria-label="Menu">
+        <span class="w-5 h-[1.5px] bg-ink block transition-all" id="bar1"></span>
+        <span class="w-5 h-[1.5px] bg-ink block transition-all" id="bar2"></span>
+        <span class="w-3.5 h-[1.5px] bg-ink block transition-all ml-auto" id="bar3"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden bg-cream/95 navbar-scroll border-t border-border px-5 py-6">
+    <div class="flex flex-col gap-5 font-sans text-[15px] text-muted">
+      <a href="#portfolio" class="hover:text-ink transition-colors" onclick="closeMobileMenu()">Portfolio</a>
+      <a href="#about" class="hover:text-ink transition-colors" onclick="closeMobileMenu()">About</a>
+      <a href="#packages" class="hover:text-ink transition-colors" onclick="closeMobileMenu()">Packages</a>
+      <a href="#faq" class="hover:text-ink transition-colors" onclick="closeMobileMenu()">FAQ</a>
+      <a href="#contact" class="hover:text-ink transition-colors" onclick="closeMobileMenu()">Contact</a>
+      <a href="https://wa.me/6281234567890" target="_blank"
+         class="inline-flex items-center justify-center gap-2 bg-accent text-cream text-[13px] font-medium tracking-widest uppercase px-5 py-3 rounded-full mt-1">
+        Book Session
+      </a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════ HERO ═══════════════════════════════════════ -->
+<section class="min-h-screen pt-20 pb-12 px-5 flex flex-col justify-center max-w-6xl mx-auto">
+  <div class="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+
+    <!-- Text -->
+    <div>
+      <p class="fade-up font-sans text-[11px] tracking-[0.25em] uppercase text-accent mb-5 ornament">Jakarta · Indonesia</p>
+      <h1 class="fade-up delay-1 font-serif text-5xl md:text-6xl lg:text-7xl font-light leading-[1.1] text-ink mb-6">
+        Momen yang<br/>
+        <em class="text-accent">terasa</em>,<br/>
+        bukan sekadar<br/>
+        terlihat.
+      </h1>
+      <p class="fade-up delay-2 font-sans text-[14px] leading-relaxed text-muted max-w-sm mb-8">
+        Kami merekam kehangatan, keintiman, dan ketulusan di balik setiap momen — 
+        untuk keluarga, pasangan, dan hari istimewa Anda.
+      </p>
+      <div class="fade-up delay-3 flex flex-col sm:flex-row gap-3">
+        <a href="https://wa.me/6281234567890" target="_blank"
+           class="inline-flex items-center justify-center gap-2 bg-ink text-cream text-[12px] font-medium tracking-widest uppercase px-6 py-3.5 rounded-full hover:bg-accent transition-colors">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.556 4.116 1.524 5.851L.054 23.5l5.799-1.522A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.67-.516-5.19-1.416l-.37-.22-3.443.903.919-3.362-.242-.386A9.94 9.94 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          Booking Session
+        </a>
+        <a href="#portfolio"
+           class="inline-flex items-center justify-center gap-2 border border-border text-ink text-[12px] font-medium tracking-widest uppercase px-6 py-3.5 rounded-full hover:border-accent hover:text-accent transition-colors">
+          Lihat Portfolio
+        </a>
+      </div>
+      <!-- Social proof -->
+      <div class="fade-up delay-4 flex items-center gap-4 mt-8 pt-7 border-t border-border">
+        <div class="flex -space-x-2">
+          <img src="assets/pexels-alexander-mass-748453803-26903019.webp" class="w-8 h-8 rounded-full border-2 border-cream object-cover" alt="" />
+          <img src="assets/pexels-dmitry-rodionov-30660763.webp" class="w-8 h-8 rounded-full border-2 border-cream object-cover" alt="" />
+          <img src="assets/pexels-prolificpeople-30221672.webp" class="w-8 h-8 rounded-full border-2 border-cream object-cover" alt="" />
+        </div>
+        <p class="font-sans text-[12px] text-muted">
+          <span class="text-ink font-medium">200+</span> sesi selesai dengan bahagia
+        </p>
+      </div>
+    </div>
+
+    <!-- Hero image -->
+    <div class="fade-up delay-2 relative">
+      <div class="rounded-[24px] overflow-hidden aspect-[4/5]">
+        <img src="assets/pexels-sairam-rasa-587546-33759104.webp" 
+             alt="Couple session outdoor" 
+             class="w-full h-full object-cover" />
+      </div>
+      <!-- Floating badge -->
+      <div class="absolute -bottom-4 -left-4 md:-left-8 bg-surface border border-border rounded-2xl px-4 py-3 shadow-sm">
+        <p class="font-sans text-[10px] text-muted tracking-wide uppercase mb-0.5">Certified by</p>
+        <p class="font-serif text-[15px] text-ink font-medium">Indonesian Photo Awards</p>
+      </div>
+      <!-- Decoration dot -->
+      <div class="absolute -top-3 -right-3 w-14 h-14 rounded-full border border-accent/30 flex items-center justify-center">
+        <div class="w-2 h-2 rounded-full bg-accent/60"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ VALUE ═══════════════════════════════════════ -->
+<section class="py-16 px-5 bg-surface border-y border-border">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid md:grid-cols-3 gap-8 md:gap-12">
+
+      <div class="reveal text-center md:text-left">
+        <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-accent/10 mb-4">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+        </div>
+        <h3 class="font-serif text-2xl font-medium text-ink mb-2">Arahan yang Natural</h3>
+        <p class="font-sans text-[13px] leading-relaxed text-muted">
+          Tidak ada pose kaku. Kami memandu Anda masuk ke momen nyata, sehingga ekspresi yang muncul terasa tulus dan hidup.
+        </p>
+      </div>
+
+      <div class="reveal text-center md:text-left">
+        <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-accent/10 mb-4">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        </div>
+        <h3 class="font-serif text-2xl font-medium text-ink mb-2">Editing Hangat & Konsisten</h3>
+        <p class="font-sans text-[13px] leading-relaxed text-muted">
+          Setiap foto diedit dengan tone hangat yang khas — lembut, bersih, dan terasa seperti cahaya sore yang sempurna.
+        </p>
+      </div>
+
+      <div class="reveal text-center md:text-left">
+        <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-accent/10 mb-4">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        </div>
+        <h3 class="font-serif text-2xl font-medium text-ink mb-2">Proses Booking Simpel</h3>
+        <p class="font-sans text-[13px] leading-relaxed text-muted">
+          Chat via WhatsApp, pilih jadwal, dan semua beres. Tidak ada formulir panjang, tidak ada komunikasi yang membingungkan.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ PORTFOLIO ═══════════════════════════════════════ -->
+<section id="portfolio" class="py-20 px-5">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="reveal text-center mb-12">
+      <p class="font-sans text-[11px] tracking-[0.25em] uppercase text-accent mb-3 ornament">Portfolio</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-light text-ink mb-4">Karya yang kami<br/><em>banggakan</em></h2>
+      <p class="font-sans text-[13px] text-muted max-w-md mx-auto">Setiap foto adalah cerita. Berikut sebagian momen yang kami abadikan bersama klien kami.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="reveal flex justify-center gap-0 mb-8 border border-border rounded-full p-1 w-fit mx-auto">
+      <button class="tab-btn active font-sans text-[12px] tracking-widest uppercase px-5 py-2 rounded-full transition-colors" data-tab="all">Semua</button>
+      <button class="tab-btn font-sans text-[12px] tracking-widest uppercase px-5 py-2 rounded-full transition-colors text-muted hover:text-ink" data-tab="couple">Couple</button>
+      <button class="tab-btn font-sans text-[12px] tracking-widest uppercase px-5 py-2 rounded-full transition-colors text-muted hover:text-ink" data-tab="wedding">Wedding</button>
+      <button class="tab-btn font-sans text-[12px] tracking-widest uppercase px-5 py-2 rounded-full transition-colors text-muted hover:text-ink" data-tab="family">Family</button>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div id="gallery" class="columns-2 md:columns-3 gap-3 md:gap-4 space-y-3 md:space-y-4 px-0.5">
+
+      <!-- Couple 1 — portrait -->
+      <div class="gallery-item cursor-pointer group break-inside-avoid" data-cat="couple">
+        <div class="bg-border rounded-[16px] overflow-hidden">
+          <img src="assets/pexels-84330351-9171331.webp" class="w-full h-auto object-cover" alt="Couple Session" loading="lazy" />
+        </div>
+        <p class="font-sans text-[11px] text-muted mt-2 tracking-wide pl-0.5">Couple Session</p>
+      </div>
+
+      <!-- Wedding 1 — portrait B&W blur -->
+      <div class="gallery-item cursor-pointer group break-inside-avoid" data-cat="wedding">
+        <div class="bg-border rounded-[16px] overflow-hidden">
+          <img src="assets/pexels-rogeriosouzafotografia-31286774.webp" class="w-full h-auto object-cover" alt="Wedding Moment" loading="lazy" />
+        </div>
+        <p class="font-sans text-[11px] text-muted mt-2 tracking-wide pl-0.5">Wedding Moment</p>
+      </div>
+
+      <!-- Family 1 — keluarga ladang portrait -->
+      <div class="gallery-item cursor-pointer group break-inside-avoid" data-cat="family">
+        <div class="bg-border rounded-[16px] overflow-hidden">
+          <img src="assets/pexels-prolificpeople-30221672.webp" class="w-full h-auto object-cover" alt="Family Session" loading="lazy" />
+        </div>
+        <p class="font-sans text-[11px] text-muted mt-2 tracking-wide pl-0.5">Family Session</p>
+      </div>
+
+      <!-- Couple 2 — double exposure -->
+      <div class="gallery-item cursor-pointer group break-inside-avoid" data-cat="couple">
+        <div class="bg-border rounded-[16px] overflow-hidden">
+          <img src="assets/pexels-h-nh-ph-m-724202179-18440122.webp" class="w-full h-auto object-cover" alt="Couple Intimate" loading="lazy" />
+        </div>
+        <p class="font-sans text-[11px] text-muted mt-2 tracking-wide pl-0.5">Couple Intimate</p>
+      </div>
+
+      <!-- Family 2 — golden hour candid landscape -->
+      <div class="gallery-item cursor-pointer group break-inside-avoid" data-cat="family">
+        <div class="bg-border rounded-[16px] overflow-hidden">
+          <img src="assets/pexels-jayanth-muppaneni-1883885743-29124852.webp" class="w-full h-auto object-cover" alt="Family Candid" loading="lazy" />
+        </div>
+        <p class="font-sans text-[11px] text-muted mt-2 tracking-wide pl-0.5">Family Candid</p>
+      </div>
+
+      <!-- Wedding 2 — silhouette jendela portrait -->
+      <div class="gallery-item cursor-pointer group break-inside-avoid" data-cat="wedding">
+        <div class="bg-border rounded-[16px] overflow-hidden">
+          <img src="assets/pexels-alexander-mass-748453803-26903019.webp" class="w-full h-auto object-cover" alt="Wedding Intimate" loading="lazy" />
+        </div>
+        <p class="font-sans text-[11px] text-muted mt-2 tracking-wide pl-0.5">Wedding Intimate</p>
+      </div>
+
+      <!-- Couple 3 — B&W close up -->
+      <div class="gallery-item cursor-pointer group break-inside-avoid" data-cat="couple">
+        <div class="bg-border rounded-[16px] overflow-hidden">
+          <img src="assets/pexels-darku-1176844802-31433510.webp" class="w-full h-auto object-cover" alt="Couple Close Up" loading="lazy" />
+        </div>
+        <p class="font-sans text-[11px] text-muted mt-2 tracking-wide pl-0.5">Couple Close Up</p>
+      </div>
+
+      <!-- Family 3 — beach sunset landscape -->
+      <div class="gallery-item cursor-pointer group break-inside-avoid" data-cat="family">
+        <div class="bg-border rounded-[16px] overflow-hidden">
+          <img src="assets/pexels-sairam-rasa-587546-33759104.webp" class="w-full h-auto object-cover" alt="Family Beach" loading="lazy" />
+        </div>
+        <p class="font-sans text-[11px] text-muted mt-2 tracking-wide pl-0.5">Family Beach</p>
+      </div>
+
+      <!-- Couple 4 — sunset silhouette -->
+      <div class="gallery-item cursor-pointer group break-inside-avoid" data-cat="couple">
+        <div class="bg-border rounded-[16px] overflow-hidden">
+          <img src="assets/pexels-prolificpeople-30221605.webp" class="w-full h-auto object-cover" alt="Couple Sunset" loading="lazy" />
+        </div>
+        <p class="font-sans text-[11px] text-muted mt-2 tracking-wide pl-0.5">Couple Sunset</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ ABOUT ═══════════════════════════════════════ -->
+<section id="about" class="py-20 px-5 bg-surface border-y border-border">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+
+    <div class="reveal order-2 md:order-1">
+      <div class="rounded-[24px] overflow-hidden aspect-[4/5]">
+        <img src="assets/pexels-dmitry-rodionov-30660763.webp" 
+             alt="Fotografer Lumière Studio" 
+             class="w-full h-full object-cover" />
+      </div>
+    </div>
+
+    <div class="reveal order-1 md:order-2">
+      <p class="font-sans text-[11px] tracking-[0.25em] uppercase text-accent mb-4 ornament">About</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-light text-ink mb-6 leading-tight">
+        Saya percaya foto terbaik<br/><em>lahir dari kepercayaan.</em>
+      </h2>
+      <p class="font-sans text-[14px] leading-[1.85] text-muted mb-6">
+        Halo, saya <strong class="text-ink font-medium">Adira Saraswati</strong> — fotografer dengan lebih dari delapan tahun pengalaman merekam momen paling berharga dalam kehidupan seseorang. Pendekatan saya sederhana: hadir sepenuhnya, menciptakan rasa nyaman, dan membiarkan keindahan momen berbicara sendiri.
+      </p>
+      <p class="font-sans text-[14px] leading-[1.85] text-muted mb-8">
+        Setiap sesi adalah percakapan, bukan arahan. Saya percaya momen paling jujur muncul ketika Anda melupakan kamera — dan di situlah saya bekerja.
+      </p>
+      <div class="flex gap-8">
+        <div>
+          <p class="font-serif text-4xl font-light text-ink">8<span class="text-accent">+</span></p>
+          <p class="font-sans text-[12px] text-muted tracking-wide mt-0.5">Tahun pengalaman</p>
+        </div>
+        <div class="w-px bg-border"></div>
+        <div>
+          <p class="font-serif text-4xl font-light text-ink">200<span class="text-accent">+</span></p>
+          <p class="font-sans text-[12px] text-muted tracking-wide mt-0.5">Sesi selesai</p>
+        </div>
+        <div class="w-px bg-border"></div>
+        <div>
+          <p class="font-serif text-4xl font-light text-ink">98<span class="text-accent">%</span></p>
+          <p class="font-sans text-[12px] text-muted tracking-wide mt-0.5">Klien puas</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ PACKAGES ═══════════════════════════════════════ -->
+<section id="packages" class="py-20 px-5">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="reveal text-center mb-12">
+      <p class="font-sans text-[11px] tracking-[0.25em] uppercase text-accent mb-3 ornament">Packages</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-light text-ink mb-4">Pilih paket yang<br/><em>tepat untuk Anda</em></h2>
+      <p class="font-sans text-[13px] text-muted">Semua paket termasuk konsultasi awal dan hasil edit dengan tone khas Lumière.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+
+      <!-- Package 1 -->
+      <div class="reveal pkg-card bg-surface border border-border rounded-[20px] p-7">
+        <p class="font-sans text-[10px] tracking-[0.2em] uppercase text-accent mb-4">Essentials</p>
+        <h3 class="font-serif text-3xl font-light text-ink mb-1">Intimate Session</h3>
+        <p class="font-sans text-[12px] text-muted mb-5">Cocok untuk: <span class="text-ink">Couple & Prewedding</span></p>
+        <div class="space-y-2.5 mb-7">
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-muted">Durasi 1–1,5 jam</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-muted">30–40 foto hasil edit</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-muted">1 lokasi outdoor pilihan</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-muted">Soft file via Google Drive</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-muted">Revisi ringan 1 kali</p>
+          </div>
+        </div>
+        <div class="border-t border-border pt-5 flex items-end justify-between">
+          <div>
+            <p class="font-sans text-[11px] text-muted">Mulai dari</p>
+            <p class="font-serif text-3xl font-light text-ink">Rp 1,5<span class="text-[18px]">jt</span></p>
+          </div>
+          <a href="https://wa.me/6281234567890" target="_blank"
+             class="font-sans text-[11px] tracking-widest uppercase text-accent border border-accent/40 px-4 py-2 rounded-full hover:bg-accent hover:text-cream transition-colors">
+            Book
+          </a>
+        </div>
+      </div>
+
+      <!-- Package 2 (Featured) -->
+      <div class="reveal pkg-card featured bg-ink text-cream rounded-[20px] p-7 relative overflow-hidden">
+        <div class="absolute top-4 right-4 bg-accent text-cream text-[9px] tracking-widest uppercase px-3 py-1 rounded-full">Terpopuler</div>
+        <p class="font-sans text-[10px] tracking-[0.2em] uppercase text-accentLight mb-4">Signature</p>
+        <h3 class="font-serif text-3xl font-light text-cream mb-1">Full Session</h3>
+        <p class="font-sans text-[12px] text-cream/60 mb-5">Cocok untuk: <span class="text-cream/80">Wedding & Family</span></p>
+        <div class="space-y-2.5 mb-7">
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accentLight flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-cream/70">Durasi 2–3 jam</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accentLight flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-cream/70">60–80 foto hasil edit</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accentLight flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-cream/70">2 lokasi pilihan Anda</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accentLight flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-cream/70">Outfit change 1x</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accentLight flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-cream/70">Cetak foto 4R (10 lembar)</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accentLight flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-cream/70">Revisi hingga 3 kali</p>
+          </div>
+        </div>
+        <div class="border-t border-white/10 pt-5 flex items-end justify-between">
+          <div>
+            <p class="font-sans text-[11px] text-cream/50">Mulai dari</p>
+            <p class="font-serif text-3xl font-light text-cream">Rp 3,5<span class="text-[18px]">jt</span></p>
+          </div>
+          <a href="https://wa.me/6281234567890" target="_blank"
+             class="font-sans text-[11px] tracking-widest uppercase bg-accent text-cream px-4 py-2 rounded-full hover:bg-accentLight transition-colors">
+            Book
+          </a>
+        </div>
+      </div>
+
+      <!-- Package 3 -->
+      <div class="reveal pkg-card bg-surface border border-border rounded-[20px] p-7">
+        <p class="font-sans text-[10px] tracking-[0.2em] uppercase text-accent mb-4">Premium</p>
+        <h3 class="font-serif text-3xl font-light text-ink mb-1">Story Package</h3>
+        <p class="font-sans text-[12px] text-muted mb-5">Cocok untuk: <span class="text-ink">Wedding Full Day</span></p>
+        <div class="space-y-2.5 mb-7">
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-muted">Durasi 6–8 jam</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-muted">150–200 foto hasil edit</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-muted">2 fotografer + asisten</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-muted">Album foto 20x20 cm</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-muted">Highlight video 3 menit</p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></div>
+            <p class="font-sans text-[13px] text-muted">Revisi unlimited</p>
+          </div>
+        </div>
+        <div class="border-t border-border pt-5 flex items-end justify-between">
+          <div>
+            <p class="font-sans text-[11px] text-muted">Mulai dari</p>
+            <p class="font-serif text-3xl font-light text-ink">Rp 8<span class="text-[18px]">jt</span></p>
+          </div>
+          <a href="https://wa.me/6281234567890" target="_blank"
+             class="font-sans text-[11px] tracking-widest uppercase text-accent border border-accent/40 px-4 py-2 rounded-full hover:bg-accent hover:text-cream transition-colors">
+            Book
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="reveal text-center font-sans text-[12px] text-muted mt-6">
+      Harga di atas belum termasuk transport luar Jakarta. Hubungi kami untuk diskusi lebih lanjut.
+    </p>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ PROCESS ═══════════════════════════════════════ -->
+<section class="py-20 px-5 bg-surface border-y border-border">
+  <div class="max-w-5xl mx-auto">
+
+    <div class="reveal text-center mb-14">
+      <p class="font-sans text-[11px] tracking-[0.25em] uppercase text-accent mb-3 ornament">How It Works</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-light text-ink">Dari chat pertama<br/><em>hingga foto di tangan</em></h2>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
+
+      <div class="reveal text-center">
+        <div class="w-10 h-10 rounded-full border border-accent/40 flex items-center justify-center mx-auto mb-4">
+          <span class="font-serif text-xl text-accent font-light">1</span>
+        </div>
+        <h4 class="font-serif text-xl font-medium text-ink mb-2">Chat & Konsultasi</h4>
+        <p class="font-sans text-[12px] text-muted leading-relaxed">Ceritakan visi dan momen yang ingin Anda abadikan. Kami siap mendengarkan.</p>
+      </div>
+
+      <div class="reveal text-center">
+        <div class="w-10 h-10 rounded-full border border-accent/40 flex items-center justify-center mx-auto mb-4">
+          <span class="font-serif text-xl text-accent font-light">2</span>
+        </div>
+        <h4 class="font-serif text-xl font-medium text-ink mb-2">Pilih Paket & Jadwal</h4>
+        <p class="font-sans text-[12px] text-muted leading-relaxed">Tentukan paket, tanggal, dan lokasi. Kami bantu sarankan lokasi yang tepat.</p>
+      </div>
+
+      <div class="reveal text-center">
+        <div class="w-10 h-10 rounded-full border border-accent/40 flex items-center justify-center mx-auto mb-4">
+          <span class="font-serif text-xl text-accent font-light">3</span>
+        </div>
+        <h4 class="font-serif text-xl font-medium text-ink mb-2">Sesi Foto</h4>
+        <p class="font-sans text-[12px] text-muted leading-relaxed">Santai, nikmati prosesnya. Kami yang urus sisanya — dari arahan hingga pencahayaan.</p>
+      </div>
+
+      <div class="reveal text-center">
+        <div class="w-10 h-10 rounded-full border border-accent/40 flex items-center justify-center mx-auto mb-4">
+          <span class="font-serif text-xl text-accent font-light">4</span>
+        </div>
+        <h4 class="font-serif text-xl font-medium text-ink mb-2">Terima Hasil</h4>
+        <p class="font-sans text-[12px] text-muted leading-relaxed">5–10 hari kerja, foto siap dikirimkan via Google Drive dalam resolusi penuh.</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ TESTIMONIALS ═══════════════════════════════════════ -->
+<section class="py-20 px-5">
+  <div class="max-w-6xl mx-auto">
+    <div class="reveal text-center mb-12">
+      <p class="font-sans text-[11px] tracking-[0.25em] uppercase text-accent mb-3 ornament">Testimonials</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-light text-ink">Kata mereka<br/><em>tentang kami</em></h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-5">
+
+      <div class="reveal bg-surface border border-border rounded-[20px] p-6">
+        <div class="flex gap-0.5 mb-4">
+          <span class="text-accent text-sm">★★★★★</span>
+        </div>
+        <p class="font-sans text-[13px] leading-[1.8] text-muted mb-5">
+          "Sesinya jauh lebih menyenangkan dari yang kami bayangkan. Adira sangat tenang dan memahami apa yang kami inginkan tanpa perlu banyak kata."
+        </p>
+        <div class="flex items-center gap-3">
+          <img src="assets/pexels-dmitry-rodionov-30660763.webp" class="w-10 h-10 rounded-full object-cover" alt="" />
+          <div>
+            <p class="font-sans text-[13px] font-medium text-ink">Rania & Dimas</p>
+            <p class="font-sans text-[11px] text-muted">Couple Session, Bogor</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal bg-surface border border-border rounded-[20px] p-6">
+        <div class="flex gap-0.5 mb-4">
+          <span class="text-accent text-sm">★★★★★</span>
+        </div>
+        <p class="font-sans text-[13px] leading-[1.8] text-muted mb-5">
+          "Foto wedding kami persis seperti yang kami impikan — hangat, natural, dan penuh cerita. Setiap kali melihatnya, kami merasa kembali ke hari itu."
+        </p>
+        <div class="flex items-center gap-3">
+          <img src="assets/pexels-prolificpeople-30221672.webp" class="w-10 h-10 rounded-full object-cover" alt="" />
+          <div>
+            <p class="font-sans text-[13px] font-medium text-ink">Putri & Arief</p>
+            <p class="font-sans text-[11px] text-muted">Wedding Intimate, Bali</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal bg-surface border border-border rounded-[20px] p-6">
+        <div class="flex gap-0.5 mb-4">
+          <span class="text-accent text-sm">★★★★★</span>
+        </div>
+        <p class="font-sans text-[13px] leading-[1.8] text-muted mb-5">
+          "Anak kami yang tadinya malu jadi ikut bermain dengan kamera. Hasilnya? Foto keluarga paling autentik yang pernah kami miliki."
+        </p>
+        <div class="flex items-center gap-3">
+          <img src="assets/pexels-alexander-mass-748453803-26903019.webp" class="w-10 h-10 rounded-full object-cover" alt="" />
+          <div>
+            <p class="font-sans text-[13px] font-medium text-ink">Keluarga Santoso</p>
+            <p class="font-sans text-[11px] text-muted">Family Session, Jakarta</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ FAQ ═══════════════════════════════════════ -->
+<section id="faq" class="py-20 px-5 bg-surface border-y border-border">
+  <div class="max-w-3xl mx-auto">
+
+    <div class="reveal text-center mb-12">
+      <p class="font-sans text-[11px] tracking-[0.25em] uppercase text-accent mb-3 ornament">FAQ</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-light text-ink">Pertanyaan<br/><em>yang sering muncul</em></h2>
+    </div>
+
+    <div class="space-y-0 divide-y divide-border reveal">
+
+      <div class="faq-item py-5">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 text-left">
+          <span class="font-sans text-[14px] font-medium text-ink">Berapa lama waktu pengiriman foto?</span>
+          <span class="faq-icon text-accent text-xl font-light flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer">
+          <p class="font-sans text-[13px] text-muted leading-relaxed pt-3 pb-1">Proses editing membutuhkan 5–10 hari kerja setelah sesi selesai. Untuk paket wedding, 10–14 hari kerja. Kami menginformasikan progress secara berkala.</p>
+        </div>
+      </div>
+
+      <div class="faq-item py-5">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 text-left">
+          <span class="font-sans text-[14px] font-medium text-ink">Bagaimana jika cuaca tidak mendukung?</span>
+          <span class="faq-icon text-accent text-xl font-light flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer">
+          <p class="font-sans text-[13px] text-muted leading-relaxed pt-3 pb-1">Kami sangat fleksibel untuk reschedule tanpa biaya tambahan jika cuaca benar-benar tidak memungkinkan. Selalu ada opsi indoor yang indah sebagai cadangan.</p>
+        </div>
+      </div>
+
+      <div class="faq-item py-5">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 text-left">
+          <span class="font-sans text-[14px] font-medium text-ink">Apa yang perlu saya siapkan sebelum sesi?</span>
+          <span class="faq-icon text-accent text-xl font-light flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer">
+          <p class="font-sans text-[13px] text-muted leading-relaxed pt-3 pb-1">Datang dengan pakaian yang Anda merasa nyaman dan percaya diri. Kami akan bantu saran soal warna dan gaya yang cocok. Yang paling penting: datang dengan pikiran tenang dan siap bersenang-senang.</p>
+        </div>
+      </div>
+
+      <div class="faq-item py-5">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 text-left">
+          <span class="font-sans text-[14px] font-medium text-ink">Apakah tersedia untuk luar Jakarta?</span>
+          <span class="faq-icon text-accent text-xl font-light flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer">
+          <p class="font-sans text-[13px] text-muted leading-relaxed pt-3 pb-1">Ya, kami melayani sesi di seluruh Jabodetabek dan kota-kota lain (Bandung, Yogyakarta, Bali, dll.) dengan biaya transport yang disepakati bersama. Hubungi kami untuk detail.</p>
+        </div>
+      </div>
+
+      <div class="faq-item py-5">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 text-left">
+          <span class="font-sans text-[14px] font-medium text-ink">Bagaimana sistem pembayarannya?</span>
+          <span class="faq-icon text-accent text-xl font-light flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer">
+          <p class="font-sans text-[13px] text-muted leading-relaxed pt-3 pb-1">DP 50% untuk konfirmasi booking, pelunasan di hari sesi. Kami menerima transfer bank, GoPay, OVO, dan QRIS. Invoice resmi tersedia.</p>
+        </div>
+      </div>
+
+      <div class="faq-item py-5">
+        <button class="faq-trigger w-full flex items-center justify-between gap-4 text-left">
+          <span class="font-sans text-[14px] font-medium text-ink">Apakah saya mendapatkan semua foto mentah (raw)?</span>
+          <span class="faq-icon text-accent text-xl font-light flex-shrink-0">+</span>
+        </button>
+        <div class="faq-answer">
+          <p class="font-sans text-[13px] text-muted leading-relaxed pt-3 pb-1">Kami memberikan foto hasil editing terbaik sesuai paket yang dipilih. File raw tidak disertakan karena proses kurasi adalah bagian dari kualitas layanan kami.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ CLOSING CTA ═══════════════════════════════════════ -->
+<section id="contact" class="py-24 px-5">
+  <div class="max-w-3xl mx-auto text-center">
+
+    <div class="reveal">
+      <p class="font-sans text-[11px] tracking-[0.25em] uppercase text-accent mb-5 ornament">Mulai Sekarang</p>
+      <h2 class="font-serif text-4xl md:text-6xl font-light text-ink leading-tight mb-6">
+        Momen ini tidak akan<br/>terulang. <em class="text-accent">Abadikan.</em>
+      </h2>
+      <p class="font-sans text-[14px] text-muted leading-relaxed max-w-md mx-auto mb-10">
+        Ceritakan momen apa yang ingin Anda simpan selamanya. Kami siap mendengarkan dan membantu mewujudkannya.
+      </p>
+
+      <a href="https://wa.me/6281234567890?text=Halo%20Lumière%20Studio%2C%20saya%20ingin%20menanyakan%20tentang%20sesi%20foto." 
+         target="_blank"
+         class="inline-flex items-center gap-3 bg-ink text-cream font-sans text-[13px] font-medium tracking-widest uppercase px-8 py-4 rounded-full hover:bg-accent transition-colors">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.556 4.116 1.524 5.851L.054 23.5l5.799-1.522A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.897 0-3.67-.516-5.19-1.416l-.37-.22-3.443.903.919-3.362-.242-.386A9.94 9.94 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        Chat via WhatsApp
+      </a>
+
+      <p class="font-sans text-[12px] text-muted mt-5">
+        Atau email kami di 
+        <a href="/cdn-cgi/l/email-protection#cba3aea7a7a48ba7bea6a2aeb9aeb8bfbeafa2a4e5a2af" class="text-accent hover:underline"><span class="__cf_email__" data-cfemail="b0d8d5dcdcdff0dcc5ddd9d5c2d5c3c4c5d4d9df9ed9d4">[email&#160;protected]</span></a>
+      </p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════ FOOTER ═══════════════════════════════════════ -->
+<footer class="border-t border-border py-10 px-5">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <p class="font-serif text-xl font-light text-ink">
+      Lumière<span class="text-accent italic"> Studio</span>
+    </p>
+    <p class="font-sans text-[12px] text-muted text-center">
+      © 2025 Lumière Studio. Demo Concept — dibuat oleh 
+      <span class="text-accent">Ray</span> sebagai portofolio desain.
+    </p>
+    <div class="flex items-center gap-5">
+      <a href="#" class="font-sans text-[11px] text-muted hover:text-ink transition-colors tracking-wide">Instagram</a>
+      <a href="#" class="font-sans text-[11px] text-muted hover:text-ink transition-colors tracking-wide">TikTok</a>
+      <a href="https://wa.me/6281234567890" class="font-sans text-[11px] text-muted hover:text-ink transition-colors tracking-wide">WhatsApp</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════ SCRIPTS ═══════════════════════════════════════ -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ── Navbar scroll effect ──
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) {
+      navbar.classList.add('bg-cream/90', 'navbar-scroll', 'border-b', 'border-border', 'shadow-sm');
+    } else {
+      navbar.classList.remove('bg-cream/90', 'navbar-scroll', 'border-b', 'border-border', 'shadow-sm');
+    }
+  });
+
+  // ── Mobile menu ──
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  let menuOpen = false;
+
+  menuToggle.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    mobileMenu.classList.toggle('hidden', !menuOpen);
+    document.getElementById('bar3').classList.toggle('w-5', menuOpen);
+    document.getElementById('bar3').classList.toggle('w-3.5', !menuOpen);
+    document.getElementById('bar3').classList.toggle('ml-0', menuOpen);
+    document.getElementById('bar3').classList.toggle('ml-auto', !menuOpen);
+  });
+
+  function closeMobileMenu() {
+    menuOpen = false;
+    mobileMenu.classList.add('hidden');
+  }
+
+  // ── FAQ accordion ──
+  document.querySelectorAll('.faq-trigger').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const answer = btn.nextElementSibling;
+      const icon = btn.querySelector('.faq-icon');
+      const isOpen = answer.classList.contains('open');
+
+      // Close all
+      document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+      document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('open'));
+
+      if (!isOpen) {
+        answer.classList.add('open');
+        icon.classList.add('open');
+      }
+    });
+  });
+
+  // ── Gallery filter ──
+  const tabs = document.querySelectorAll('.tab-btn');
+  const items = document.querySelectorAll('.gallery-item');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active', 'text-accent'));
+      tab.classList.add('active');
+
+      const cat = tab.dataset.tab;
+      items.forEach(item => {
+        if (cat === 'all' || item.dataset.cat === cat) {
+          item.style.display = '';
+          item.style.opacity = '0';
+          item.style.marginBottom = '';
+          setTimeout(() => { item.style.transition = 'opacity 0.4s'; item.style.opacity = '1'; }, 10);
+        } else {
+          item.style.display = 'none';
+          item.style.marginBottom = '0';
+        }
+      });
+    });
+  });
+
+  // ── Scroll reveal ──
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
